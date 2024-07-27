@@ -12,5 +12,4 @@ public class Comment
     public DateTime CreateOn { get; set; } = DateTime.Now;
     public int BlogId { get; set; }
     public Blog Blog { get; set; }
-    public List<Comment> Comments { get; set; } = new List<Comment>();
 }

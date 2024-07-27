@@ -38,7 +38,7 @@ public class TagRepository : ITagRepository
     
     public async Task<Tag?> UpdateAsync(int id, Tag tagModel)
     {
-        var existingTag = await _context.Tags.FindAsync(id);
+        var existingTag = await _context.Tags.FirstOrDefaultAsync(s=>s.Id == id);
 
         if (existingTag == null)
             return null;
@@ -53,7 +53,7 @@ public class TagRepository : ITagRepository
 
     public async Task<Tag?> DeleteAsync(int id)
     {
-        var deleteTag = await _context.Tags.FindAsync(id);
+        var deleteTag = await _context.Tags.FirstOrDefaultAsync(s=>s.Id == id);
 
         if (deleteTag == null)
             return null;
