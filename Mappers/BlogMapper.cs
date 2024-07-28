@@ -33,7 +33,7 @@ public static class BlogMapper
             Subtitles = blogModel.Subtitles,
             CreateOn = blogModel.CreateOn,
             NumberOfViews = blogModel.NumberOfViews,
-            AppUser = new AppUserBlogDto()
+            AppUser = new AppUserDto()
             {
                 Id = blogModel.AppUser.Id,
                 Name = blogModel.AppUser.Name,
