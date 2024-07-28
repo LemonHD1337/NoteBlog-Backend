@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Dtos.AccountDto;
+using NoteBlog.Dtos.AppUserDtos;
+using NoteBlog.mappers;
 using NoteBlog.Models;
 
 namespace NoteBlog.Controllers
@@ -62,6 +64,48 @@ namespace NoteBlog.Controllers
             {
                 return StatusCode(500, e);
             }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            try
+            {
+                var user = await _userManager.Users.Include(u=>u.Links).FirstOrDefaultAsync(u => Equals(u.Id, id));
+
+                if (user == null) return NotFound();
+
+                return Ok(user.FromAppUserToAppUserDetailsDto());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDetails([FromRoute] string id, [FromBody] AppUserUpdateDto appUserUpdateDto)
+        {
+            try
+            {
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => Equals(u.Id, id));
+
+                if (user == null) return NotFound();
+
+                user.Name = appUserUpdateDto.Name;
+                user.Surname = appUserUpdateDto.Surname;
+                user.Bio = appUserUpdateDto.Bio;
+                user.Email = appUserUpdateDto.Email;
+                user.UserName = appUserUpdateDto.UserName;
+
+                await _userManager.UpdateAsync(user);
+
+                return Ok(user.FromAppUserToAppUserDetailsDto());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }   
         }
     }
 }
