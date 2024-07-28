@@ -1,4 +1,4 @@
-using NoteBlog.Dtos.BlogContentDto;
+using NoteBlog.Dtos.BlogContentDtos;
 using NoteBlog.Models;
 
 namespace NoteBlog.mappers;

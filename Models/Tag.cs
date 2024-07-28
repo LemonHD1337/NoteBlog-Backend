@@ -5,6 +5,6 @@ namespace NoteBlog.Models;
 public class Tag
 {
     public int Id { get; set; }
-    [Column(TypeName = "char(100)")]
+    [Column(TypeName = "varchar(100)")]
     public string TagName { get; set; } = String.Empty;
 }

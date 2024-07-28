@@ -5,11 +5,11 @@ namespace NoteBlog.Models;
 
 public class AppUser : IdentityUser
 {
-    [Column(TypeName = "char(100)")]
+    [Column(TypeName = "varchar(100)")]
     public string Name { get; set; } = String.Empty;
-    [Column(TypeName = "char(100)")]
+    [Column(TypeName = "varchar(100)")]
     public string Surname { get; set; } = String.Empty;
-    [Column(TypeName = "char(200)")]
+    [Column(TypeName = "varchar(250)")]
     public string? Bio { get; set; } = String.Empty;
     public int CreatedBlogs { get; set; } = 0;
     public List<Blog> Blogs { get; set; } = new List<Blog>();
