@@ -12,6 +12,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+ options.AddPolicy("MyAllowSpecificOrigins", policyBuilder =>
+ {
+     policyBuilder.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
+ });
+});
+
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -48,7 +56,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("MyAllowSpecificOrigins");
 app.MapControllers();
 
 app.Run();
