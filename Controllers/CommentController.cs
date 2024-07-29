@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NoteBlog.Dtos.CommentDto;
+using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
 using NoteBlog.Models;
@@ -18,9 +19,9 @@ namespace NoteBlog.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationQueryObject paginationQueryObject)
         {
-            var commentsModel = await _repo.GetAllAsync();
+            var commentsModel = await _repo.GetAllAsync(paginationQueryObject);
             
             var commentsDto = commentsModel.Select(c => c.FromCommentModelToCommentDto());
             

@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
 using NoteBlog.Dtos.BlogDto;
+using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
+using NuGet.Versioning;
 
 namespace NoteBlog.Repository;
 
@@ -15,9 +18,10 @@ public class BlogRepository : IBlogRepository
         _context = context;
     }
     
-    public async Task<List<Blog>> GetAllAsync()
+    public async Task<List<Blog>> GetAllAsync(PaginationQueryObject paginationQueryObject)
     {
-        return await Includes().ToListAsync();
+        var skipNumber = (paginationQueryObject.PageNumber - 1) * paginationQueryObject.PageSize;
+        return await Includes().Take(paginationQueryObject.PageSize).Skip(skipNumber).ToListAsync();
     }
 
     public async Task<Blog?> GetByIdAsync(int id)

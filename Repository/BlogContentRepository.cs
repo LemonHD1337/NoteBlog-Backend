@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
+using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 
@@ -14,9 +15,10 @@ public class BlogContentRepository: IBlogContentRepository
         _context = context;
     }
     
-    public async Task<List<BlogContent>> GetAllAsync()
+    public async Task<List<BlogContent>> GetAllAsync(PaginationQueryObject paginationQueryObject)
     {
-        return await _context.BlogContents.ToListAsync();
+        var skipNumber = (paginationQueryObject.PageNumber - 1) * paginationQueryObject.PageSize;
+        return await _context.BlogContents.Take(paginationQueryObject.PageSize).Skip(skipNumber).ToListAsync();
     }
 
     public async Task<BlogContent?> GetByIdAsync(int id)

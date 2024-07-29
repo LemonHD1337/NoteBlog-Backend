@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
+using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 
@@ -15,16 +16,15 @@ public class CommentRepository: ICommentRepository
         _context = context;
     }
     
-    public async Task<List<Comment>> GetAllAsync()
+    public async Task<List<Comment>> GetAllAsync(PaginationQueryObject paginationQueryObject)
     {
-        var comments = await JoinAppUser().ToListAsync();
-        
-        return comments;
+        var skipNumber = (paginationQueryObject.PageNumber - 1) * paginationQueryObject.PageSize;
+        return await Include().Take(paginationQueryObject.PageSize).Skip(skipNumber).ToListAsync();
     }
 
     public async Task<Comment?> GetByIdAsync(int id)
     {
-        return await JoinAppUser().FirstOrDefaultAsync(c=>c.Id == id);
+        return await Include().FirstOrDefaultAsync(c=>c.Id == id);
     }
 
     public async Task<Comment> CreateAsync(Comment commentModel)
@@ -46,14 +46,14 @@ public class CommentRepository: ICommentRepository
 
         await _context.SaveChangesAsync();
 
-        var updatedComment = await JoinAppUser().FirstOrDefaultAsync(c => c.Id == id);
+        var updatedComment = await Include().FirstOrDefaultAsync(c => c.Id == id);
 
         return updatedComment;
     }
 
     public async Task<Comment?> DeleteAsync(int id)
     {
-        var comment =  await JoinAppUser().FirstOrDefaultAsync(c=>c.Id == id);
+        var comment =  await Include().FirstOrDefaultAsync(c=>c.Id == id);
 
         if (comment == null) return comment;
         
@@ -63,19 +63,8 @@ public class CommentRepository: ICommentRepository
          return comment;
     }
 
-    public IQueryable<Comment> JoinAppUser()
+    public IQueryable<Comment> Include()
     {
-        return _context.Comments.Join(_context.Users,
-            comment => comment.AppUserId,
-            user => user.Id,
-            (comment, user) => new Comment()
-            {
-                Id = comment.Id,
-                BlogId = comment.BlogId,
-                Content = comment.Content,
-                AppUser = user,
-                CreateOn = comment.CreateOn,
-            }
-        );
+        return _context.Comments.Include(c => c.AppUser);
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NoteBlog.Dtos.BlogDto;
+using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
 
@@ -18,9 +19,9 @@ namespace NoteBlog.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationQueryObject paginationQueryObject)
         {
-            var blogs = await _repo.GetAllAsync();
+            var blogs = await _repo.GetAllAsync(paginationQueryObject);
 
             var blogsDto = blogs.Select(blog => blog.FromBlogModelToBlogDto());
 

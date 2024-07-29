@@ -13,6 +13,8 @@ public static class CommentMapper
             CreateOn = commentModel.CreateOn,
             Id = commentModel.Id,
             UserName = commentModel.AppUser.UserName,
+            Name = commentModel.AppUser.Name,
+            Surname = commentModel.AppUser.Surname
         };
     }
     public static Comment FromCreateCommentDtoToCommentModel(this CreateCommentDto createCommentDto)
