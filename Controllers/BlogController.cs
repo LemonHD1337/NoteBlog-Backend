@@ -47,6 +47,14 @@ namespace NoteBlog.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdBlog.Id }, createdBlog);
         }
 
+        [HttpPost("CreateWithContents")]
+        public async Task<IActionResult> CreateWithContents([FromBody] CreateBlogWithContentDto createBlogWithContentDto)
+        {
+            var createdBlog = await _repo.CreateAsync(createBlogWithContentDto.FromCreateBlogWithContentsDtoToBlogModel());
+
+            return CreatedAtAction(nameof(GetById), new { id = createdBlog.Id }, createdBlog);
+        }
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBlogDto updateBlogDto)
         {
