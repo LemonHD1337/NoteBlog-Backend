@@ -38,6 +38,8 @@ namespace NoteBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateTagDto tagDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var createdTag = await _repo.CreateAsync(tagDto.FromCreateDtoToTagModel());
 
             return CreatedAtAction(nameof(GetById), new {id = createdTag.Id}, createdTag);
@@ -46,6 +48,8 @@ namespace NoteBlog.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id,[FromBody] UpdateTagDto tagDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var updatedTag = await _repo.UpdateAsync(id, tagDto.FromUpdateDtoToTagModel());
 
             if (updatedTag == null)

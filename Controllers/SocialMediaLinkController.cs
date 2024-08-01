@@ -40,6 +40,8 @@ namespace NoteBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSocialMediaLinkDto createSocialMediaLinkDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var createdSocialMediaLink = await _repo.CreateAsync(createSocialMediaLinkDto.FromCreateSocialMediaLinkDtoToSocialMediaLinkModel());
 
             return CreatedAtAction(nameof(GetById), 
@@ -50,6 +52,8 @@ namespace NoteBlog.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSocialMediaLinkDto updateSocialMediaLinkDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var updatedSocialMediaLink = await _repo.UpdateAsync(id, updateSocialMediaLinkDto);
 
             if (updatedSocialMediaLink == null) return NotFound();

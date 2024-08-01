@@ -43,6 +43,8 @@ namespace NoteBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBlogContent([FromForm] CreateBlogContentDto createBlogContentDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             try
             {
                 if (createBlogContentDto.PictureFile != null)
@@ -70,6 +72,8 @@ namespace NoteBlog.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateBlogContent([FromRoute] int id,[FromForm] UpdateBlogContentDto updateBlogContentDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var pictureFile = updateBlogContentDto.PictureFile;
             var videoFile = updateBlogContentDto.VideoFile;
 

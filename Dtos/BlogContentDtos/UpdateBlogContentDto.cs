@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace NoteBlog.Dtos.BlogContentDtos;
 
 public class UpdateBlogContentDto
 {
-    public string Title { get; set; } = String.Empty;
+    [StringLength(60)]
+    public string? Title { get; set; } = String.Empty;
+    [Required]
     public string Content { get; set; } = String.Empty;
     public IFormFile? PictureFile { get; set; }
     public IFormFile? VideoFile { get; set; }

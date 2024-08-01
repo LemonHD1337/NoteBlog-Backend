@@ -24,6 +24,8 @@ namespace NoteBlog.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == loginDto.Email.ToLower());
 
             if (user == null) return Unauthorized("Invalid username!");
@@ -38,6 +40,8 @@ namespace NoteBlog.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             try
             {
                 var appUser = new AppUser()
@@ -86,6 +90,8 @@ namespace NoteBlog.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDetails([FromRoute] string id, [FromBody] AppUserUpdateDto appUserUpdateDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             try
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => Equals(u.Id, id));

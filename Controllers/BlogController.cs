@@ -43,6 +43,8 @@ namespace NoteBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateBlogDto createBlogDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             try
             {
                 createBlogDto.ImageName = await _fileService.UploadFile(createBlogDto.ImageFile);
@@ -61,6 +63,8 @@ namespace NoteBlog.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateBlogDto updateBlogDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             if (updateBlogDto.ImageFile != null)
             {
                 try

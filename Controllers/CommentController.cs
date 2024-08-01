@@ -41,6 +41,8 @@ namespace NoteBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCommentDto createCommentDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var createdComment = await _repo.CreateAsync(createCommentDto.FromCreateCommentDtoToCommentModel());
             
             return Created();
@@ -49,6 +51,8 @@ namespace NoteBlog.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentDto updateCommentDto)
         {
+            if (!ModelState.IsValid) return BadRequest();
+            
             var existingComment = await _repo.UpdateAsync(id, updateCommentDto.FromUpdateCommentDtoToCommentModel());
 
             if (existingComment == null) return NotFound();

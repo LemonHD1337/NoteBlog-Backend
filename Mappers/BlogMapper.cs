@@ -54,35 +54,4 @@ public static class BlogMapper
             ImageName = createBlogDto.ImageName
         };
     }
-
-    public static Blog FromCreateBlogWithContentsDtoToBlogModel(this CreateBlogWithContentDto createBlogWithContentDto)
-    {
-        
-        var blog =  new Blog()
-        {
-            TagId = createBlogWithContentDto.TagId,
-            AppUserId = createBlogWithContentDto.AppUserId,
-            Subtitles = createBlogWithContentDto.Subtitles,
-            Title = createBlogWithContentDto.Title
-        };
-        
-        var blogContentsModel = new List<BlogContent>();
-
-        foreach (var createBlogContentsDto in createBlogWithContentDto.Contents)
-        {
-            var blogContent = new BlogContent()
-            {
-                Title = createBlogContentsDto.Title,
-                Content = createBlogContentsDto.Content,
-                ImageName = createBlogContentsDto.Picture,
-                VideoName = createBlogContentsDto.Video,
-                BlogId = blog.Id
-            };
-            
-            blogContentsModel.Add(blogContent);
-        }
-
-        blog.Contents = blogContentsModel;
-        return blog;
-    }
 }
