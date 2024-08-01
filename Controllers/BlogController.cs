@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NoteBlog.Dtos.BlogDto;
 using NoteBlog.Helpers;
@@ -12,10 +11,12 @@ namespace NoteBlog.Controllers
     public class BlogController : ControllerBase
     {
         private readonly IBlogRepository _repo;
+        private readonly IFileService _fileService;
 
-        public BlogController(IBlogRepository repository)
+        public BlogController(IBlogRepository repository, IFileService fileService)
         {
             _repo = repository;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -42,22 +43,41 @@ namespace NoteBlog.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBlogDto createBlogDto)
         {
+            try
+            {
+                createBlogDto.ImageName = await _fileService.UploadFile(createBlogDto.ImageFile);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Server error");
+            }
+            
             var createdBlog = await _repo.CreateAsync(createBlogDto.FromCreateBlogDtoToBlogModel());
 
             return CreatedAtAction(nameof(GetById), new { id = createdBlog.Id }, createdBlog);
         }
-
-        [HttpPost("CreateWithContents")]
-        public async Task<IActionResult> CreateWithContents([FromBody] CreateBlogWithContentDto createBlogWithContentDto)
-        {
-            var createdBlog = await _repo.CreateAsync(createBlogWithContentDto.FromCreateBlogWithContentsDtoToBlogModel());
-
-            return CreatedAtAction(nameof(GetById), new { id = createdBlog.Id }, createdBlog);
-        }
+        
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBlogDto updateBlogDto)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateBlogDto updateBlogDto)
         {
+            if (updateBlogDto.ImageFile != null)
+            {
+                try
+                {
+                    var existingBlog = await _repo.FirstOrDefaultAsync(id);
+                    if (existingBlog == null) return NotFound();
+
+                    await _fileService.DeleteFile(existingBlog.ImageName);
+                    updateBlogDto.ImageName = await _fileService.UploadFile(updateBlogDto.ImageFile);
+                }
+                catch (Exception e)
+                {
+                    return StatusCode(500, "Server error");
+                }
+                
+            }
+            
             var updatedBlog = await _repo.UpdateAsync(id, updateBlogDto);
 
             if (updatedBlog == null)
@@ -74,7 +94,27 @@ namespace NoteBlog.Controllers
             if (deletedBlog == null)
                 return NotFound();
 
-            return NoContent();
+            foreach (var blogContent in deletedBlog.Contents)
+            {
+                try
+                {
+                    if (blogContent.ImageName != null)
+                    {
+                        await _fileService.DeleteFile(blogContent.ImageName);
+                    }
+
+                    if (blogContent.VideoName != null)
+                    {
+                        await _fileService.DeleteFile(blogContent.VideoName);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            return Ok(deletedBlog);
         }
         
     }

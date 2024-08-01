@@ -12,6 +12,7 @@ public class Blog
     public List<BlogContent> Contents { get; set; } = new List<BlogContent>();
     public DateTime CreateOn { get; set; } = DateTime.Now;
     public int NumberOfViews { get; set; } = 0;
+    public string ImageName { get; set; } = String.Empty;
     public string AppUserId { get; set; } = String.Empty;
     public AppUser AppUser { get; set; }
     public int TagId { get; set; }

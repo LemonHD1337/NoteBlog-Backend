@@ -3,7 +3,7 @@ using NoteBlog.Dtos.BlogContentDtos;
 using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
-using NoteBlog.Models;
+
 
 namespace NoteBlog.Controllers
 {
@@ -12,10 +12,12 @@ namespace NoteBlog.Controllers
     public class BlogContentController : ControllerBase
     {
         private readonly IBlogContentRepository _repo;
+        private readonly IFileService _fileService;
 
-        public BlogContentController(IBlogContentRepository repository)
+        public BlogContentController(IBlogContentRepository repository, IFileService fileService)
         {
             _repo = repository;
+            _fileService = fileService;
         }
         
         [HttpGet]
@@ -23,9 +25,9 @@ namespace NoteBlog.Controllers
         {
             var blogContents = await _repo.GetAllAsync(paginationQueryObject);
 
-            var blogContentsDtos = blogContents.Select(bc => bc.FromBlogContentModelToBlogContentDto());
+            var blogContentsDto = blogContents.Select(bc => bc.FromBlogContentModelToBlogContentDto());
 
-            return Ok(blogContentsDtos);
+            return Ok(blogContentsDto);
         }
 
         [HttpGet("{id:int}")]
@@ -39,28 +41,74 @@ namespace NoteBlog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBlogContent([FromBody] CreateBlogContentDto createBlogContentDto)
+        public async Task<IActionResult> CreateBlogContent([FromForm] CreateBlogContentDto createBlogContentDto)
         {
+            try
+            {
+                if (createBlogContentDto.PictureFile != null)
+                {
+                    var imageFileName = await _fileService.UploadFile(createBlogContentDto.PictureFile);
+                    createBlogContentDto.Picture = imageFileName;
+                }
+
+                if (createBlogContentDto.VideoFile != null)
+                {
+                    var videoFileName = await _fileService.UploadFile(createBlogContentDto.VideoFile);
+                    createBlogContentDto.Video = videoFileName;
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Server error");
+            }
+            
             var createdBlogContent = await _repo.CreateAsync(createBlogContentDto.FromCreateBlogContentDtoToBlogContentModel());
 
             return CreatedAtAction(nameof(GetById), new { id = createdBlogContent.Id }, createdBlogContent.FromBlogContentModelToBlogContentDto());
         }
 
-        [HttpPost("createManyBlogContents")]
-        public async Task<IActionResult> CreateManyBlogContents([FromBody] List<CreateBlogContentDto> createBlogContentsDto)
-        {
-            var createBlogContentsModel = createBlogContentsDto.Select(b => b.FromCreateBlogContentDtoToBlogContentModel());
-
-            var createdBlogContentsModel = await _repo.CreateManyAsync(createBlogContentsModel);
-
-            var createdBlogContentsModelToDto = createdBlogContentsModel.Select(s => s.FromBlogContentModelToBlogContentDto());
-            
-            return CreatedAtAction(nameof(GetAll), createBlogContentsDto);
-        }
-
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateBlogContent([FromRoute] int id,[FromBody] UpdateBlogContentDto updateBlogContentDto)
+        public async Task<IActionResult> UpdateBlogContent([FromRoute] int id,[FromForm] UpdateBlogContentDto updateBlogContentDto)
         {
+            var pictureFile = updateBlogContentDto.PictureFile;
+            var videoFile = updateBlogContentDto.VideoFile;
+
+            try
+            {
+                if (pictureFile != null || videoFile != null)
+                {
+                    var existingBlogContent = await _repo.FirstOrDefultAsync(id);
+                    
+                    if (existingBlogContent == null) return NotFound();
+                    
+                    if (pictureFile != null)
+                    {
+                        if (existingBlogContent.ImageName != null)
+                        {
+                            await _fileService.DeleteFile(existingBlogContent.ImageName);
+                            updateBlogContentDto.Picture = await _fileService.UploadFile(pictureFile);   
+                        }
+                        
+                        updateBlogContentDto.Picture = await _fileService.UploadFile(pictureFile);   
+                    }
+
+                    if (videoFile != null)
+                    {
+                        if (existingBlogContent.VideoName != null)
+                        {
+                            await _fileService.DeleteFile(existingBlogContent.VideoName);
+                            updateBlogContentDto.Video = await _fileService.UploadFile(videoFile);   
+                        }
+                        
+                        updateBlogContentDto.Video = await _fileService.UploadFile(videoFile);   
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Server error");
+            }
+            
             var updatedBlogContent = await _repo.UpdateAsync(id, updateBlogContentDto.FromUpdateBlogContentDtoToBlogContentModel());
 
             if (updatedBlogContent == null) return NotFound();
@@ -74,6 +122,14 @@ namespace NoteBlog.Controllers
             var deletedBlogContent = await _repo.DeleteAsync(id);
 
             if (deletedBlogContent == null) return NotFound();
+
+            if (deletedBlogContent.VideoName != null)
+            {
+                await _fileService.DeleteFile(deletedBlogContent.VideoName);
+            }else if (deletedBlogContent.ImageName != null)
+            {
+                await _fileService.DeleteFile(deletedBlogContent.ImageName);
+            }
 
             return NoContent();
         }

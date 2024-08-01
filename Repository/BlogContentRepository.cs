@@ -51,8 +51,8 @@ public class BlogContentRepository: IBlogContentRepository
 
         existingContent.Title = blogContent.Title;
         existingContent.Content = existingContent.Content;
-        existingContent.Picture = blogContent.Picture;
-        existingContent.Video = blogContent.Video;
+        if (blogContent.ImageName != null) existingContent.ImageName = blogContent.ImageName;
+        if (blogContent.VideoName!= null) existingContent.VideoName = blogContent.VideoName;
         
         await _context.SaveChangesAsync();
         return existingContent;
@@ -69,5 +69,10 @@ public class BlogContentRepository: IBlogContentRepository
         await _context.SaveChangesAsync();
 
         return deletedContent;
+    }
+
+    public async Task<BlogContent?> FirstOrDefultAsync(int id)
+    {
+        return await _context.BlogContents.FirstOrDefaultAsync(b => b.Id == id);
     }
 }

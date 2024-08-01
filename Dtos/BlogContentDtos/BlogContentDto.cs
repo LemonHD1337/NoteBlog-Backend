@@ -1,3 +1,5 @@
+using NoteBlog.Models;
+
 namespace NoteBlog.Dtos.BlogContentDtos;
 
 public class BlogContentDto

@@ -45,6 +45,7 @@ public class BlogRepository : IBlogRepository
         existingBlog.Title = updateBlogDto.Title;
         existingBlog.Subtitles = updateBlogDto.Subtitles;
         existingBlog.TagId = updateBlogDto.TagId;
+        if(updateBlogDto.ImageName != null) existingBlog.ImageName = updateBlogDto.ImageName;
 
         await _context.SaveChangesAsync();
         
@@ -57,10 +58,12 @@ public class BlogRepository : IBlogRepository
 
         if (deleteBlog == null) return null;
 
+        var deletedContentWithBlogContents = await _context.Blogs.Include(b => b.Contents).FirstOrDefaultAsync(b => b.Id == id);
+
         _context.Blogs.Remove(deleteBlog);
         await _context.SaveChangesAsync();
 
-        return deleteBlog;
+        return deletedContentWithBlogContents;
     }
 
     public IQueryable<Blog> Includes()
@@ -70,5 +73,10 @@ public class BlogRepository : IBlogRepository
             .Include(b => b.AppUser)
             .Include(b=>b.Tag)
             .AsQueryable();
+    }
+
+    public async Task<Blog?> FirstOrDefaultAsync(int id)
+    {
+        return await _context.Blogs.FirstOrDefaultAsync(b => b.Id == id);
     }
 }

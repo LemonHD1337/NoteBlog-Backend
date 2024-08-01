@@ -13,4 +13,6 @@ public interface IBlogRepository
     Task<Blog?> DeleteAsync(int id);
     IQueryable<Blog> Includes();
 
+    Task<Blog?> FirstOrDefaultAsync(int id);
+
 }

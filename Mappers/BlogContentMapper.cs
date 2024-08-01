@@ -12,9 +12,9 @@ public static class BlogContentMapper
             Id = blogContent.Id,
             Title = blogContent.Title,
             Content = blogContent.Content,
-            Picture = blogContent.Picture,
-            Video = blogContent.Video,
-            BlogId = blogContent.BlogId
+            Picture = blogContent.ImageName,
+            Video = blogContent.VideoName,
+            BlogId = blogContent.BlogId,
         };
     }
 
@@ -24,8 +24,8 @@ public static class BlogContentMapper
         {
             Title = createBlogContentDto.Title,
             Content = createBlogContentDto.Content,
-            Picture = createBlogContentDto.Picture,
-            Video = createBlogContentDto.Video,
+            ImageName = createBlogContentDto.Picture,
+            VideoName = createBlogContentDto.Video,
             BlogId = createBlogContentDto.BlogId,
         };
     }
@@ -36,8 +36,8 @@ public static class BlogContentMapper
         {
             Title = updateBlogContentDto.Title,
             Content = updateBlogContentDto.Content,
-            Picture = updateBlogContentDto.Picture,
-            Video = updateBlogContentDto.Video
+            ImageName = updateBlogContentDto.Picture,
+            VideoName = updateBlogContentDto.Video
         };
     }
 }

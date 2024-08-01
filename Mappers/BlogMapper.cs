@@ -17,8 +17,8 @@ public static class BlogMapper
             {
                 Title = c.Title,
                 Content = c.Content,
-                Picture = c.Picture,
-                Video = c.Video,
+                Picture = c.ImageName,
+                Video = c.VideoName,
                 Id = c.Id,
                 BlogId = c.BlogId
             };
@@ -40,7 +40,7 @@ public static class BlogMapper
                 Surname = blogModel.AppUser.Surname
             },
             Contents = contentDtos,
-            Tag = blogModel.Tag
+            Tag = blogModel.Tag,
         };
     }
     public static Blog FromCreateBlogDtoToBlogModel(this CreateBlogDto createBlogDto)
@@ -50,7 +50,8 @@ public static class BlogMapper
             Title = createBlogDto.Title,
             Subtitles = createBlogDto.Subtitles,
             AppUserId = createBlogDto.AppUserId,
-            TagId = createBlogDto.TagId
+            TagId = createBlogDto.TagId,
+            ImageName = createBlogDto.ImageName
         };
     }
 
@@ -73,8 +74,8 @@ public static class BlogMapper
             {
                 Title = createBlogContentsDto.Title,
                 Content = createBlogContentsDto.Content,
-                Picture = createBlogContentsDto.Picture,
-                Video = createBlogContentsDto.Video,
+                ImageName = createBlogContentsDto.Picture,
+                VideoName = createBlogContentsDto.Video,
                 BlogId = blog.Id
             };
             

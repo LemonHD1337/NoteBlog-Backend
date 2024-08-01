@@ -11,4 +11,5 @@ public interface IBlogContentRepository
     Task<List<BlogContent>> CreateManyAsync(IEnumerable<BlogContent> blogContents);
     Task<BlogContent?> UpdateAsync(int id, BlogContent blogContent);
     Task<BlogContent?> DeleteAsync(int id);
+    Task<BlogContent?> FirstOrDefultAsync(int id);
 }
