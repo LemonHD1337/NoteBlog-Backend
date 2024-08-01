@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
 using NoteBlog.Dtos.BlogDto;
 using NoteBlog.Helpers;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
-using NuGet.Versioning;
+
 
 namespace NoteBlog.Repository;
 
@@ -18,10 +17,46 @@ public class BlogRepository : IBlogRepository
         _context = context;
     }
     
-    public async Task<List<Blog>> GetAllAsync(PaginationQueryObject paginationQueryObject)
+    public async Task<List<Blog>> GetAllAsync(BlogQueryObject query)
     {
-        var skipNumber = (paginationQueryObject.PageNumber - 1) * paginationQueryObject.PageSize;
-        return await Includes().Take(paginationQueryObject.PageSize).Skip(skipNumber).ToListAsync();
+        var blogs = Includes();
+
+        if (!string.IsNullOrWhiteSpace(query.UserName))
+        {
+            blogs = blogs.Where(b => b.AppUser.UserName.Contains(query.UserName));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Name))
+        {
+            blogs = blogs.Where(b => b.AppUser.Name.Contains(query.Name));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Surname))
+        {
+            blogs = blogs.Where(b => b.AppUser.Surname.Contains(query.Surname));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Title))
+        {
+            blogs = blogs.Where(b => b.Title.Contains(query.Title));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Tag))
+        {
+            blogs = blogs.Where(b => b.Tag.TagName.Contains(query.Tag));
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.SortBy))
+        {
+            if (query.SortBy.Equals("Views", StringComparison.OrdinalIgnoreCase))
+            {
+                blogs = query.IsDescending ? blogs.OrderByDescending(b => b.NumberOfViews) : blogs.OrderBy(b => b.NumberOfViews);
+            }
+        }
+        
+        var skipNumber = (query.PageNumber - 1) * query.PageSize;
+        
+        return await blogs.Skip(skipNumber).Take(query.PageSize).ToListAsync();
     }
 
     public async Task<Blog?> GetByIdAsync(int id)

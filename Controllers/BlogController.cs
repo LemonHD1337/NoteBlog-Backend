@@ -20,9 +20,9 @@ namespace NoteBlog.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationQueryObject paginationQueryObject)
+        public async Task<IActionResult> GetAll([FromQuery] BlogQueryObject blogQueryObject)
         {
-            var blogs = await _repo.GetAllAsync(paginationQueryObject);
+            var blogs = await _repo.GetAllAsync(blogQueryObject);
 
             var blogsDto = blogs.Select(blog => blog.FromBlogModelToBlogDto());
 
@@ -41,7 +41,7 @@ namespace NoteBlog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBlogDto createBlogDto)
+        public async Task<IActionResult> Create([FromForm] CreateBlogDto createBlogDto)
         {
             try
             {
