@@ -23,9 +23,9 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Comment>()
-            .HasOne("Blog")
-            .WithMany("Comments")
-            .HasForeignKey("BlogId")
+            .HasOne(c => c.AppUser)
+            .WithMany(a => a.Comments)
+            .HasForeignKey(c => c.AppUserId)
             .OnDelete(DeleteBehavior.NoAction);
 
  
