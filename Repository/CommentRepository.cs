@@ -16,10 +16,9 @@ public class CommentRepository: ICommentRepository
         _context = context;
     }
     
-    public async Task<List<Comment>> GetAllAsync(PaginationQueryObject paginationQueryObject)
+    public async Task<List<Comment>> GetAllAsync()
     {
-        var skipNumber = (paginationQueryObject.PageNumber - 1) * paginationQueryObject.PageSize;
-        return await Include().Take(paginationQueryObject.PageSize).Skip(skipNumber).ToListAsync();
+        return await Include().ToListAsync();
     }
 
     public async Task<Comment?> GetByIdAsync(int id)

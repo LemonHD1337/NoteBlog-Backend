@@ -21,9 +21,9 @@ namespace NoteBlog.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationQueryObject paginationQueryObject)
+        public async Task<IActionResult> GetAll()
         {
-            var blogContents = await _repo.GetAllAsync(paginationQueryObject);
+            var blogContents = await _repo.GetAllAsync();
 
             var blogContentsDto = blogContents.Select(bc => bc.FromBlogContentModelToBlogContentDto());
 

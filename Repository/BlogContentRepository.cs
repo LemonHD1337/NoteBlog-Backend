@@ -15,10 +15,9 @@ public class BlogContentRepository: IBlogContentRepository
         _context = context;
     }
     
-    public async Task<List<BlogContent>> GetAllAsync(PaginationQueryObject paginationQueryObject)
+    public async Task<List<BlogContent>> GetAllAsync()
     {
-        var skipNumber = (paginationQueryObject.PageNumber - 1) * paginationQueryObject.PageSize;
-        return await _context.BlogContents.Take(paginationQueryObject.PageSize).Skip(skipNumber).ToListAsync();
+        return await _context.BlogContents.ToListAsync();
     }
 
     public async Task<BlogContent?> GetByIdAsync(int id)
