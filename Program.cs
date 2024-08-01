@@ -4,6 +4,7 @@ using NoteBlog.Data;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 using NoteBlog.Repository;
+using NoteBlog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,7 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IBlogContentRepository, BlogContentRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<ISocialMediaRepository, SocialMediaLinkRepository>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 
 var app = builder.Build();
