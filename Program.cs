@@ -1,10 +1,13 @@
+using System.Configuration;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 using NoteBlog.Repository;
 using NoteBlog.Services;
+using NoteBlog.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +41,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = true;
-}).AddEntityFrameworkStores<ApplicationDbContext>();
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false; 
+}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
@@ -46,6 +54,9 @@ builder.Services.AddScoped<IBlogContentRepository, BlogContentRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<ISocialMediaRepository, SocialMediaLinkRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
+
+
+builder.Services.AddTransient<IEmailSender, EmailSenderService>();
 
 
 var app = builder.Build();

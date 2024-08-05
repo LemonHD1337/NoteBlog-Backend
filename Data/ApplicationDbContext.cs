@@ -27,7 +27,6 @@ public class ApplicationDbContext: IdentityDbContext<AppUser>
             .WithMany(a => a.Comments)
             .HasForeignKey(c => c.AppUserId)
             .OnDelete(DeleteBehavior.NoAction);
-
  
         
         List<IdentityRole> roles = new List<IdentityRole>

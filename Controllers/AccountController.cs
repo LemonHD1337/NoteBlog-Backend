@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Dtos.AccountDto;
@@ -14,11 +15,13 @@ namespace NoteBlog.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         [HttpPost("login")]
@@ -104,14 +107,75 @@ namespace NoteBlog.Controllers
                 user.Email = appUserUpdateDto.Email;
                 user.UserName = appUserUpdateDto.UserName;
 
-                await _userManager.UpdateAsync(user);
+                var result = await _userManager.UpdateAsync(user);
 
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine(result.Errors);
+                    return StatusCode(500, "Server error");
+                }
+                
                 return Ok(user.FromAppUserToAppUserDetailsDto());
             }
             catch (Exception e)
             {
                 return StatusCode(500, e);
             }   
+        }
+
+        [HttpPost("forgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            
+            try
+            {
+                var appUser = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+
+                if (appUser == null) return BadRequest("Invalid email");
+
+                string token = await _userManager.GeneratePasswordResetTokenAsync(appUser);
+
+                //TODO send email with link 
+                
+                return Ok(new
+                {
+                    token = token,
+                    id = appUser.Id,
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, "Server error");
+            }
+        }
+
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            
+            try
+            {
+                var appUser = await _userManager.FindByIdAsync(resetPasswordDto.Id);
+
+                if (appUser == null) return NotFound("User doesn't exists");
+
+                var result = await _userManager.ResetPasswordAsync(appUser, resetPasswordDto.Token, resetPasswordDto.Password);
+
+                if (!result.Succeeded)
+                {
+                    return StatusCode(500, result.Errors);
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
