@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
 using NoteBlog.Interfaces;
+using NoteBlog.Middlewares;
 using NoteBlog.Models;
 using NoteBlog.Repository;
 using NoteBlog.Services;
@@ -69,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors("MyAllowSpecificOrigins");
 app.MapControllers();
 
