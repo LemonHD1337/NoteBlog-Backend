@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NoteBlog.Dtos.AccountDto;
 using NoteBlog.Dtos.AppUserDtos;
 using NoteBlog.mappers;
@@ -36,6 +37,30 @@ namespace NoteBlog.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
             if (!result.Succeeded) return Unauthorized("Username not found and/or password incorrect");
+
+            var userRole = await _userManager.GetRolesAsync(user);
+
+            var cookieData = new CookieData()
+            {
+                Surname = user.Surname,
+                Name = user.Name,
+                Id = user.Id,
+                Nickname = user.UserName,
+                Role = userRole
+            };
+            
+            var cookieSettings = new CookieOptions()
+            {
+                HttpOnly = false,
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+            };
+            
+            if(loginDto.IsRemember) cookieSettings.Expires = DateTimeOffset.Now.AddDays(30);
+            
+            var dataJson = JsonConvert.SerializeObject(cookieData);
+            
+            Response.Cookies.Append("SignIn", dataJson, cookieSettings);
             
             return Ok();
         }
@@ -138,11 +163,7 @@ namespace NoteBlog.Controllers
 
                 //TODO send email with link 
                 
-                return Ok(new
-                {
-                    token = token,
-                    id = appUser.Id,
-                });
+                return Ok();
             }
             catch (Exception e)
             {

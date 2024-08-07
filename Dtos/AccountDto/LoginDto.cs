@@ -10,4 +10,5 @@ public class LoginDto
     public string Email { get; set; } = String.Empty;
     [Required]
     public string Password { get; set; } = String.Empty;
+    public bool IsRemember { get; set; } = false;
 }
