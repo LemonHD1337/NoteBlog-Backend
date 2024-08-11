@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NoteBlog.Dtos.AccountDto;
 using NoteBlog.Dtos.AppUserDtos;
+using NoteBlog.QueryObjects;
+using NoteBlog.Interfaces;
 using NoteBlog.mappers;
 using NoteBlog.Models;
 
@@ -17,12 +19,14 @@ namespace NoteBlog.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IFileService _fileService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailSender emailSender)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailSender emailSender, IFileService fileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _fileService = fileService;
         }
 
         [HttpPost("login")]
@@ -197,6 +201,50 @@ namespace NoteBlog.Controllers
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllAuthors([FromQuery] AccountQueryObject query)
+        {
+            var users = (IQueryable<AppUser>)_userManager.Users.Include(u => u.Links);
+            
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                
+                if (query.SortBy.Equals("CreatedBlogs", StringComparison.OrdinalIgnoreCase))
+                {
+                    users = query.IsDescending ?  users.OrderByDescending(u => u.CreatedBlogs) :  users.OrderBy(u => u.CreatedBlogs);
+                }
+            }
+        
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            var appUsersModel = await users.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+
+            var userDto = appUsersModel.Select(u => u.FromAppUserToUserDto());
+            
+            return Ok(userDto);
+        }
+
+        [HttpPost("createProfileImage/%{id}")]
+        public async Task<IActionResult> CreateProfileImage([FromRoute] string id, IFormFile file)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null) return NotFound();
+
+            if (user.ProfileImage != null)
+            {
+                _fileService.DeleteFile(user.ProfileImage);
+            }
+
+            user.ProfileImage = await _fileService.UploadFile(file);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded) return StatusCode(500, "Server error");
+            
+            return Ok(user.FromAppUserToUserDto());
         }
     }
 }

@@ -12,6 +12,8 @@ public class AppUser : IdentityUser
     [Column(TypeName = "varchar(250)")]
     public string? Bio { get; set; } = String.Empty;
     public int CreatedBlogs { get; set; } = 0;
+    [Column(TypeName = "varchar(50)")]
+    public string? ProfileImage { get; set; } = String.Empty;
     public List<Blog> Blogs { get; set; } = new List<Blog>();
     public List<SocialMediaLink> Links { get; set; } = new List<SocialMediaLink>();
     public List<Comment> Comments { get; set; } = new List<Comment>();

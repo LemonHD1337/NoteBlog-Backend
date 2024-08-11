@@ -1,4 +1,4 @@
-using NoteBlog.Dtos.SocialMediaLinkDtos;
+using NoteBlog.Dtos.SocialMediaLinkDto;
 using NoteBlog.Models;
 
 namespace NoteBlog.Dtos.AppUserDtos;
