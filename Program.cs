@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using NoteBlog.Data;
 using NoteBlog.Interfaces;
 using NoteBlog.Middlewares;
@@ -68,6 +69,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/uploadedFiles"
+});
 
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
