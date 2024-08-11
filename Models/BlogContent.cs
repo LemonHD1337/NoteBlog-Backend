@@ -10,9 +10,9 @@ public class BlogContent
     public string? Title { get; set; } = String.Empty;
     [Column(TypeName = "Text")]
     public string Content { get; set; } = String.Empty;
-    [Column(TypeName = "varchar(250)")]
+    [Column(TypeName = "varchar(50)")]
     public string? ImageName { get; set; } = String.Empty;
-    [Column(TypeName = "varchar(250)")]
+    [Column(TypeName = "varchar(50)")]
     public string? VideoName { get; set; } = String.Empty;
     public int BlogId { get; set; }
     public Blog Blog { get; set; }
