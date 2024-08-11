@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
 using NoteBlog.Dtos.BlogDto;
-using NoteBlog.Helpers;
+using NoteBlog.QueryObjects;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 
@@ -51,6 +51,20 @@ public class BlogRepository : IBlogRepository
             if (query.SortBy.Equals("Views", StringComparison.OrdinalIgnoreCase))
             {
                 blogs = query.IsDescending ? blogs.OrderByDescending(b => b.NumberOfViews) : blogs.OrderBy(b => b.NumberOfViews);
+            }
+            
+            if(query.SortBy.Equals("Featured", StringComparison.OrdinalIgnoreCase))
+            {
+                var month = DateTime.Now.Month;
+
+                blogs = blogs.Where(b => b.CreateOn.Month == month);
+
+                blogs = query.IsDescending ? blogs.OrderByDescending(b=>b.NumberOfViews) : blogs.OrderBy(b => b.NumberOfViews);
+            }
+
+            if (query.SortBy.Equals("CreateOn", StringComparison.OrdinalIgnoreCase))
+            {
+                blogs = query.IsDescending ? blogs.OrderByDescending(b => b.CreateOn) : blogs.OrderBy(b => b.CreateOn);
             }
         }
         

@@ -1,4 +1,4 @@
-namespace NoteBlog.Helpers;
+namespace NoteBlog.QueryObjects;
 
 public class BlogQueryObject
 {

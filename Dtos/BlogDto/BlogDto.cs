@@ -12,6 +12,7 @@ public class BlogDto
     public List<BlogContentDto> Contents { get; set; } = new List<BlogContentDto>();
     public DateTime CreateOn { get; set; } = DateTime.Now;
     public int NumberOfViews { get; set; }
+    public string Image { get; set; } = String.Empty;
     public AppUserDto AppUser { get; set; }
     public Tag Tag { get; set; }
 

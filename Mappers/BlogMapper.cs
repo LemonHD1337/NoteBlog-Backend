@@ -41,6 +41,7 @@ public static class BlogMapper
             },
             Contents = contentDtos,
             Tag = blogModel.Tag,
+            Image = blogModel.ImageName
         };
     }
     public static Blog FromCreateBlogDtoToBlogModel(this CreateBlogDto createBlogDto)

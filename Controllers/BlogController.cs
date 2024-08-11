@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NoteBlog.Dtos.BlogDto;
-using NoteBlog.Helpers;
+using NoteBlog.QueryObjects;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
 
