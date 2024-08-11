@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
-using NoteBlog.Dtos.SocialMediaLinkDtos;
+using NoteBlog.Dtos.SocialMediaLinkDto;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 

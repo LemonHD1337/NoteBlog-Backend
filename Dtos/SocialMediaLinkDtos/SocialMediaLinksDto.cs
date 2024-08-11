@@ -1,6 +1,6 @@
 using NoteBlog.Dtos.AppUserDtos;
 
-namespace NoteBlog.Dtos.SocialMediaLinkDtos;
+namespace NoteBlog.Dtos.SocialMediaLinkDto;
 
 public class SocialMediaLinksDto
 {

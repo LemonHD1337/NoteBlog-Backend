@@ -1,4 +1,4 @@
-namespace NoteBlog.Dtos.SocialMediaLinkDtos;
+namespace NoteBlog.Dtos.SocialMediaLinkDto;
 
 public class SocialMediaLinkWithoutAppUser
 {

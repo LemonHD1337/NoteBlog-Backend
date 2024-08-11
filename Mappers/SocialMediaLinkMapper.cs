@@ -1,5 +1,5 @@
 using NoteBlog.Dtos.AppUserDtos;
-using NoteBlog.Dtos.SocialMediaLinkDtos;
+using NoteBlog.Dtos.SocialMediaLinkDto;
 using NoteBlog.Models;
 
 namespace NoteBlog.mappers;

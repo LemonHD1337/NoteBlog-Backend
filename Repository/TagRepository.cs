@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
+using NoteBlog.QueryObjects;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 

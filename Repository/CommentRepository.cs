@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NoteBlog.Data;
-using NoteBlog.Helpers;
+using NoteBlog.QueryObjects;
 using NoteBlog.Interfaces;
 using NoteBlog.Models;
 

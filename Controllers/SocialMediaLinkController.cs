@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NoteBlog.Dtos.SocialMediaLinkDtos;
+using NoteBlog.Dtos.SocialMediaLinkDto;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace NoteBlog.Dtos.SocialMediaLinkDtos;
+namespace NoteBlog.Dtos.SocialMediaLinkDto;
 
 public class CreateSocialMediaLinkDto
 {

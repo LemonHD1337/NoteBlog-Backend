@@ -1,4 +1,4 @@
-using NoteBlog.Helpers;
+using NoteBlog.QueryObjects;
 using NoteBlog.Models;
 
 namespace NoteBlog.Interfaces;

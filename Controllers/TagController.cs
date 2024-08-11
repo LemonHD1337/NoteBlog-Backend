@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NoteBlog.Dtos.TagDtos;
+using NoteBlog.QueryObjects;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
 
@@ -24,7 +25,7 @@ namespace NoteBlog.Controllers
             
             return Ok(tags);
         }
-
+        
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
