@@ -24,9 +24,13 @@ namespace NoteBlog.Controllers
         {
             var blogs = await _repo.GetAllAsync(blogQueryObject);
 
-            var blogsDto = blogs.Select(blog => blog.FromBlogModelToBlogDto());
+           var blogDto = blogs.Blogs.Select(blog => blog.FromBlogModelToBlogDto());
 
-            return Ok(blogsDto);
+            return Ok(new
+            {
+                totalPages = blogs.TotalPages,
+                blogs = blogDto
+            });
         }
 
         [HttpGet("{id:int}")]

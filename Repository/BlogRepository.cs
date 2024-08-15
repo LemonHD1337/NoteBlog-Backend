@@ -17,7 +17,7 @@ public class BlogRepository : IBlogRepository
         _context = context;
     }
     
-    public async Task<List<Blog>> GetAllAsync(BlogQueryObject query)
+    public async Task<BlogWithTotalPagesDto> GetAllAsync(BlogQueryObject query)
     {
         var blogs = Includes();
 
@@ -69,8 +69,16 @@ public class BlogRepository : IBlogRepository
         }
         
         var skipNumber = (query.PageNumber - 1) * query.PageSize;
-        
-        return await blogs.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+
+        var numberOfRecords = await blogs.CountAsync();
+
+        var totalPages = (int)Math.Ceiling((decimal)numberOfRecords / query.PageSize);
+        var result = await blogs.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+
+        return new BlogWithTotalPagesDto()
+        {
+            Blogs = result, TotalPages = totalPages
+        };
     }
 
     public async Task<Blog?> GetByIdAsync(int id)
@@ -123,6 +131,7 @@ public class BlogRepository : IBlogRepository
             .Include(b=>b.Tag)
             .AsQueryable();
     }
+    
 
     public async Task<Blog?> FirstOrDefaultAsync(int id)
     {
