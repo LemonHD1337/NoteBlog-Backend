@@ -226,7 +226,7 @@ namespace NoteBlog.Controllers
             return Ok(userDto);
         }
 
-        [HttpPost("createProfileImage/%{id}")]
+        [HttpPut("createProfileImage/{id}")]
         public async Task<IActionResult> CreateProfileImage([FromRoute] string id, IFormFile file)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -235,7 +235,7 @@ namespace NoteBlog.Controllers
 
             if (user.ProfileImage != null)
             {
-                _fileService.DeleteFile(user.ProfileImage);
+                await _fileService.DeleteFile(user.ProfileImage);
             }
 
             user.ProfileImage = await _fileService.UploadFile(file);
