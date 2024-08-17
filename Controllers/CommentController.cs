@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using NoteBlog.Dtos.CommentDto;
-using NoteBlog.QueryObjects;
 using NoteBlog.Interfaces;
 using NoteBlog.mappers;
-using NoteBlog.Models;
+
 
 namespace NoteBlog.Controllers
 {
@@ -68,6 +67,14 @@ namespace NoteBlog.Controllers
             if (deletedComment == null) return NotFound();
             
             return NoContent();
+        }
+
+        [HttpGet("blog/{id:int}")]
+        public async Task<IActionResult> GetByBlogId([FromRoute] int id)
+        {
+            var comments = await _repo.GetByBlogIdAsync(id);
+            var commentsDto = comments.Select(c => c.FromCommentModelToCommentDto());
+            return Ok(commentsDto);
         }
     }
 }

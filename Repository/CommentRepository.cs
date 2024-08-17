@@ -66,4 +66,9 @@ public class CommentRepository: ICommentRepository
     {
         return _context.Comments.Include(c => c.AppUser);
     }
+
+    public async Task<List<Comment>> GetByBlogIdAsync(int blogId)
+    {
+        return _context.Comments.Where(b=>b.BlogId == blogId).Include(c => c.AppUser).ToList();
+    }
 }

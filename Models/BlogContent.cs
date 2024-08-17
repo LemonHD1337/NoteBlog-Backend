@@ -14,6 +14,8 @@ public class BlogContent
     public string? ImageName { get; set; } = String.Empty;
     [Column(TypeName = "varchar(50)")]
     public string? VideoName { get; set; } = String.Empty;
+
+    public int Layout { get; set; } = 1;
     public int BlogId { get; set; }
     public Blog Blog { get; set; }
 }

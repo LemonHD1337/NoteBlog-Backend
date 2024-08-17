@@ -10,5 +10,6 @@ public class CommentDto
     public DateTime CreateOn { get; set; } = DateTime.Now;
     public string UserName { get; set; } = String.Empty;
     public string Name { get; set; } = String.Empty;
-    public String Surname { get; set; } = String.Empty;
+    public string Surname { get; set; } = String.Empty;
+    public string? ProfileImage { get; set; } = String.Empty;
 }

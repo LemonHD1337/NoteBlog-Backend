@@ -10,4 +10,5 @@ public class BlogContentDto
     public string? Picture { get; set; }
     public string? Video { get; set; }
     public int BlogId { get; set; }
+    public int Layout { get; set; }
 }

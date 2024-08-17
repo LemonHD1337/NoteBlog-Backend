@@ -20,7 +20,8 @@ public static class BlogMapper
                 Picture = c.ImageName,
                 Video = c.VideoName,
                 Id = c.Id,
-                BlogId = c.BlogId
+                BlogId = c.BlogId,
+                Layout = c.Layout,
             };
             
             contentDtos.Add(temp);

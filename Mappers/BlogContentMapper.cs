@@ -15,6 +15,7 @@ public static class BlogContentMapper
             Picture = blogContent.ImageName,
             Video = blogContent.VideoName,
             BlogId = blogContent.BlogId,
+            Layout =  blogContent.Layout
         };
     }
 
@@ -22,6 +23,7 @@ public static class BlogContentMapper
     {
         return new BlogContent()
         {
+            Layout = createBlogContentDto.Layout,
             Title = createBlogContentDto.Title,
             Content = createBlogContentDto.Content,
             ImageName = createBlogContentDto.Picture,

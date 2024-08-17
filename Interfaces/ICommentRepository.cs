@@ -10,6 +10,6 @@ public interface ICommentRepository
     Task<Comment> CreateAsync(Comment commentModel);
     Task<Comment?> UpdateAsync(int id, Comment commentModel);
     Task<Comment?> DeleteAsync(int id);
-    
     IQueryable<Comment> Include();
+    Task<List<Comment>> GetByBlogIdAsync(int blogId);
 }

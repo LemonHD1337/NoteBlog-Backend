@@ -14,4 +14,6 @@ public class CreateBlogContentDto
     public string? Video { get; set; }
     [Required]
     public int BlogId { get; set; }
+
+    public int Layout { get; set; }
 }
