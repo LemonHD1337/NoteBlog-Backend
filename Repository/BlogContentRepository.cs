@@ -49,7 +49,8 @@ public class BlogContentRepository: IBlogContentRepository
         if (existingContent == null) return null;
 
         existingContent.Title = blogContent.Title;
-        existingContent.Content = existingContent.Content;
+        existingContent.Content = blogContent.Content;
+        existingContent.Layout = blogContent.Layout;
         if (blogContent.ImageName != null) existingContent.ImageName = blogContent.ImageName;
         if (blogContent.VideoName!= null) existingContent.VideoName = blogContent.VideoName;
         

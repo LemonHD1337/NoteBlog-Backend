@@ -39,7 +39,8 @@ public static class BlogContentMapper
             Title = updateBlogContentDto.Title,
             Content = updateBlogContentDto.Content,
             ImageName = updateBlogContentDto.Picture,
-            VideoName = updateBlogContentDto.Video
+            VideoName = updateBlogContentDto.Video,
+            Layout = updateBlogContentDto.Layout,
         };
     }
 }
