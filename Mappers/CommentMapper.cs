@@ -15,7 +15,8 @@ public static class CommentMapper
             UserName = commentModel.AppUser.UserName,
             Name = commentModel.AppUser.Name,
             Surname = commentModel.AppUser.Surname,
-            ProfileImage = commentModel.AppUser.ProfileImage
+            ProfileImage = commentModel.AppUser.ProfileImage,
+            AppUserId = commentModel.AppUserId
         };
     }
     public static Comment FromCreateCommentDtoToCommentModel(this CreateCommentDto createCommentDto)
