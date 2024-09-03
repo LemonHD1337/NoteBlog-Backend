@@ -56,6 +56,7 @@ builder.Services.AddScoped<IBlogContentRepository, BlogContentRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<ISocialMediaRepository, SocialMediaLinkRepository>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IResizeImageService, ResizeImageService>();
 
 
 builder.Services.AddTransient<IEmailSender, EmailSenderService>();

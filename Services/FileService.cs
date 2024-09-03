@@ -5,10 +5,12 @@ namespace NoteBlog.Services;
 public class FileService: IFileService
 {
     private readonly string _uploads;
+    private readonly IResizeImageService _resizeImageService;
 
-    public FileService(string folderName = "Uploads")
+    public FileService(IResizeImageService resizeImageService, string folderName = "Uploads")
     {
         _uploads = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        _resizeImageService = resizeImageService;
             
         if (!Directory.Exists(_uploads)) Directory.CreateDirectory(_uploads);
     }
@@ -25,18 +27,25 @@ public class FileService: IFileService
             string fileName = GenerateFileName(_uploads, file);
         
             string filePath = Path.Combine(_uploads, fileName);
+            
+            
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
+            if (file.FileName.Equals("PictureFile"))
+            {
+                await _resizeImageService.ResizeImage(filePath, filePath, 700, 500);    
+            }
+            
             return fileName;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw e;
+            throw;
         }
     }
 
