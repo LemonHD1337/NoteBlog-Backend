@@ -50,7 +50,8 @@ namespace NoteBlog.Controllers
                 Name = user.Name,
                 Id = user.Id,
                 Nickname = user.UserName,
-                Role = userRole
+                Role = userRole,
+                ProfileImageName = user.ProfileImage,
             };
             
             var cookieSettings = new CookieOptions()
