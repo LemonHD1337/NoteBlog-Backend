@@ -10,5 +10,6 @@ public class BlogQueryObject
     public string? Surname { get; set; } = String.Empty;
     public string? Title { get; set; } = String.Empty;
     public string? Tag { get; set; } = String.Empty;
+    public string? UserId { get; set; } = String.Empty;
     public string? SortBy { get; set; } = String.Empty;
 }

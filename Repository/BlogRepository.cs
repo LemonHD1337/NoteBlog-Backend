@@ -46,6 +46,11 @@ public class BlogRepository : IBlogRepository
             blogs = blogs.Where(b => b.Tag.TagName.Contains(query.Tag));
         }
 
+        if (!string.IsNullOrWhiteSpace(query.UserId))
+        {
+            blogs = blogs.Where(b => b.AppUser.Id == query.UserId);
+        }
+
         if (!string.IsNullOrWhiteSpace(query.SortBy))
         {
             if (query.SortBy.Equals("Views", StringComparison.OrdinalIgnoreCase))
@@ -102,7 +107,7 @@ public class BlogRepository : IBlogRepository
         existingBlog.Title = updateBlogDto.Title;
         existingBlog.Subtitles = updateBlogDto.Subtitles;
         existingBlog.TagId = updateBlogDto.TagId;
-        if(updateBlogDto.ImageName != null) existingBlog.ImageName = updateBlogDto.ImageName;
+        if(updateBlogDto.ImageFile != null) existingBlog.ImageName = updateBlogDto.ImageName!;
 
         await _context.SaveChangesAsync();
         
@@ -115,9 +120,11 @@ public class BlogRepository : IBlogRepository
 
         if (deleteBlog == null) return null;
 
-        var deletedContentWithBlogContents = await _context.Blogs.Include(b => b.Contents).FirstOrDefaultAsync(b => b.Id == id);
 
         _context.Blogs.Remove(deleteBlog);
+        
+        var deletedContentWithBlogContents = await _context.Blogs.Include(b => b.Contents).FirstOrDefaultAsync(b => b.Id == id);
+
         await _context.SaveChangesAsync();
 
         return deletedContentWithBlogContents;
