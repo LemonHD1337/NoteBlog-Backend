@@ -76,7 +76,12 @@ namespace NoteBlog.Controllers
                     var existingBlog = await _repo.FirstOrDefaultAsync(id);
                     if (existingBlog == null) return NotFound();
 
-                    await _fileService.DeleteFile(existingBlog.ImageName);
+
+                    if (existingBlog.ImageName.Length != 0)
+                    {
+                        await _fileService.DeleteFile(existingBlog.ImageName);    
+                    }
+                    
                     updateBlogDto.ImageName = await _fileService.UploadFile(updateBlogDto.ImageFile);
                 }
                 catch (Exception e)
