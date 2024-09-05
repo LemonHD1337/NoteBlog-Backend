@@ -166,7 +166,14 @@ namespace NoteBlog.Controllers
 
                 string token = await _userManager.GeneratePasswordResetTokenAsync(appUser);
 
-                //TODO send email with link 
+                if (appUser.Email != null)
+                {
+                    await _emailSender.SendEmailAsync(appUser.Email, "Reset password", "<p>" + token + "</p>");    
+                }
+                else
+                {
+                    return StatusCode(500, "Server error");
+                }
                 
                 return Ok();
             }
@@ -236,7 +243,15 @@ namespace NoteBlog.Controllers
 
             if (user.ProfileImage != null)
             {
-                await _fileService.DeleteFile(user.ProfileImage);
+                try
+                {
+                    await _fileService.DeleteFile(user.ProfileImage);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return StatusCode(500, "Server error");
+                }
             }
 
             user.ProfileImage = await _fileService.UploadFile(file);

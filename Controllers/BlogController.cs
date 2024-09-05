@@ -55,6 +55,7 @@ namespace NoteBlog.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return StatusCode(500, "Server error");
             }
             
@@ -86,6 +87,7 @@ namespace NoteBlog.Controllers
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     return StatusCode(500, "Server error");
                 }
                 
@@ -107,6 +109,16 @@ namespace NoteBlog.Controllers
             if (deletedBlog == null)
                 return NotFound();
 
+            try
+            {
+                await _fileService.DeleteFile(deletedBlog.ImageName);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, "Server error");
+            }
+
             foreach (var blogContent in deletedBlog.Contents)
             {
                 try
@@ -124,11 +136,11 @@ namespace NoteBlog.Controllers
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                    return StatusCode(500, "Server error");
                 }
             }
 
             return Ok(deletedBlog);
         }
-        
     }
 }

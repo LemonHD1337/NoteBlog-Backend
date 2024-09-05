@@ -119,13 +119,12 @@ public class BlogRepository : IBlogRepository
         var deleteBlog = await _context.Blogs.FirstOrDefaultAsync(b => b.Id == id);
 
         if (deleteBlog == null) return null;
-
-
-        _context.Blogs.Remove(deleteBlog);
         
         var deletedContentWithBlogContents = await _context.Blogs.Include(b => b.Contents).FirstOrDefaultAsync(b => b.Id == id);
-
+        
+        _context.Blogs.Remove(deleteBlog);
         await _context.SaveChangesAsync();
+
 
         return deletedContentWithBlogContents;
     }
